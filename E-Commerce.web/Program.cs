@@ -9,7 +9,7 @@ namespace E_Commerce.web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -29,9 +29,9 @@ namespace E_Commerce.web
 
             #region data seeding
 
-            app.MigrateDatabase();
+            await app.MigrateDatabaseAsync();
 
-            app.SeedDatabase();
+            await app.SeedDatabaseAsync();
 
             #endregion
 
