@@ -2,6 +2,8 @@
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Persistence.Data.DataSeed;
 using E_Commerce.Persistence.Data.DbContexts;
+using E_Commerce.Persistence.Repositories;
+using E_Commerce.Services.MappingProfiles;
 using E_Commerce.web.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +27,11 @@ namespace E_Commerce.web
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DeafultConnection"));
                 });
             builder.Services.AddScoped<IDataInitializer , DataInitializer>();
+            builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
+            builder.Services.AddAutoMapper(x => x.AddProfile<ProductProfile>());
+
+
+
             var app = builder.Build();
 
             #region data seeding
