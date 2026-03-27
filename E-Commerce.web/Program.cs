@@ -30,13 +30,29 @@ namespace E_Commerce.web
                 });
             builder.Services.AddScoped<IDataInitializer , DataInitializer>();
             builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
-            builder.Services.AddAutoMapper(x => x.AddProfile<ProductProfile>());
+
+            //builder.Services.AddAutoMapper(x => x.AddProfile<ProductProfile>());
+            //builder.Services.AddTransient<ProductPictureUrlResolver>();
+            //builder.Services.AddAutoMapper(x => x.LicenseKey = "", typeof(ProductProfile).Assembly); //only works at development
+            builder.Services.AddAutoMapper(typeof(ServicesAssemblyRefrence).Assembly);//downgrade to 14
+
             builder.Services.AddScoped<IProductService , ProductService>();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
 
 
 
             var app = builder.Build();
 
+            app.UseCors("AllowAll");
             #region data seeding
 
             await app.MigrateDatabaseAsync();
@@ -54,6 +70,8 @@ namespace E_Commerce.web
 
             app.UseHttpsRedirection();
 
+
+            app.UseStaticFiles();
             app.UseAuthorization();
 
 

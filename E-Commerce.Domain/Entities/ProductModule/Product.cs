@@ -15,7 +15,7 @@ namespace E_Commerce.Domain.Entities.ProductModule
 
         #region Relationships
         public int BrandId { get; set; }
-        public ProductType ProductBrand { get; set; } = default!;
+        public ProductBrand ProductBrand { get; set; } = default!;
         public int TypeId { get; set; }
         public ProductType ProductType { get; set; } = default!;
         #endregion

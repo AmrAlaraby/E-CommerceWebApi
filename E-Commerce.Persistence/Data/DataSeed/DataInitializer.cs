@@ -56,7 +56,7 @@ namespace E_Commerce.Persistence.Data.DataSeed
         {
             //D:\route back assignments\ecomerce\E-CommerceSolution\E-Commerce.Persistence\Data\DataSeed\JSONFiles\brands.json
             var FilePath = @"../E-Commerce.Persistence\Data\DataSeed\JSONFiles\"+ fileName;
-            if(File.Exists(FilePath)) throw new FileNotFoundException($"File {fileName} dose not exist");
+            if(!File.Exists(FilePath)) throw new FileNotFoundException($"File {fileName} dose not exist");
             try
             {
                 using var datStream = File.OpenRead(FilePath);
