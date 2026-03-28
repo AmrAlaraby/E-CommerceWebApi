@@ -22,9 +22,9 @@ namespace E_Commerce.Presentation.Controllers
             this._productService = productService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAllProducts()
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAllProducts(int? brandId , int? typeId)
         {
-            var Products = await _productService.GetAllProductsAsync();
+            var Products = await _productService.GetAllProductsAsync(brandId, typeId);
             return Ok(Products);
         }
         [HttpGet("{id}")]

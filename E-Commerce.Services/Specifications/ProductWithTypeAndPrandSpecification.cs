@@ -16,7 +16,8 @@ namespace E_Commerce.Services.Specifications
             AddInclude(p => p.ProductBrand);
         }
         //all Products
-        public ProductWithTypeAndPrandSpecification() : base(null) 
+        public ProductWithTypeAndPrandSpecification(int? brandId, int? typeId)
+            : base(p=> (!brandId.HasValue || p.BrandId==brandId.Value) && (!typeId.HasValue ||p.TypeId==typeId.Value)) 
         {
             AddInclude(p=>p.ProductType);
             AddInclude(p => p.ProductBrand);
