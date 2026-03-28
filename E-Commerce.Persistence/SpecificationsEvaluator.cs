@@ -18,6 +18,10 @@ namespace E_Commerce.Persistence
 
             if (specifications is not null)
             {
+                if(specifications.Criteria is not null)
+                {
+                    Query = Query.Where(specifications.Criteria);
+                }
                 if (specifications.IncludeExpressions is not null && specifications.IncludeExpressions.Any())
                 {
                     //foreach (var includeExp in specifications.IncludeExpressions)

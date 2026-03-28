@@ -56,6 +56,11 @@ namespace E_Commerce.Persistence.Repositories
             return await _storeDbContext.Set<TEntity>().FindAsync(id);
         }
 
+        public async Task<TEntity?> GetByIdAsync(ISpecifications<TEntity, TKey> specifications)
+        {    
+            return await SpecificationsEvaluator.CreateQuery(_storeDbContext.Set<TEntity>(), specifications).FirstOrDefaultAsync();     
+        }
+
         public void Remove(TEntity entity)
         {
             _storeDbContext.Set<TEntity>().Remove(entity);
