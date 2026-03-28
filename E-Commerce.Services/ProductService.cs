@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Domain.Entities.ProductModule;
+using E_Commerce.Services.Specifications;
 using E_Commerce.Services_Abstraction;
 using E_Commerce.Shared.DTOs.ProductDTOs;
 using System;
@@ -29,7 +30,8 @@ namespace E_Commerce.Services
 
         public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync()
         {
-            var Products = await _unitOfWork.GetRrepository<Product ,int>().GetAllAsync(); 
+            var spec = new ProductWithTypeAndPrandSpecification();
+            var Products = await _unitOfWork.GetRrepository<Product, int>().GetAllAsync(spec);
             return _mapper.Map<IEnumerable<ProductDTO>>(Products);
         }
 
