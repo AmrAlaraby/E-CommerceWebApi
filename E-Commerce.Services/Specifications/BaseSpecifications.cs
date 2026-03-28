@@ -11,17 +11,39 @@ namespace E_Commerce.Services.Specifications
 {
     internal abstract class BaseSpecifications<TEntity, TKey> : ISpecifications<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
-        public ICollection<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = [];
 
+        #region Criteria
         public Expression<Func<TEntity, bool>> Criteria { get; }
+
         protected BaseSpecifications(Expression<Func<TEntity, bool>> criteriaExpression)
         {
             Criteria = criteriaExpression;
         }
+        #endregion
 
+        #region Includes
+
+        public ICollection<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = [];
         protected void AddInclude(Expression<Func<TEntity, object>> IncludeExpression)
         {
             IncludeExpressions.Add(IncludeExpression);
         }
+        #endregion
+
+        #region Sorting
+
+        public Expression<Func<TEntity, object>> OrderBy { get; private set; }
+        public Expression<Func<TEntity, object>> OrderByDescending { get; private set; }
+
+        protected void AddOrderBy(Expression<Func<TEntity, object>> OrderByExpression)
+        {
+            OrderBy=OrderByExpression;
+        }
+        protected void AddOrderByDescending(Expression<Func<TEntity, object>> OrderByDescendingExpression)
+        {
+            OrderByDescending = OrderByDescendingExpression;
+        }
+        #endregion
+
     }
 }

@@ -31,6 +31,15 @@ namespace E_Commerce.Persistence
                     Query = specifications.IncludeExpressions.Aggregate(Query ,
                         (CurrentQuery,IncludeExp)=> CurrentQuery.Include(IncludeExp));
                 }
+                if(specifications.OrderBy is not null)
+                {
+                    Query = Query.OrderBy(specifications.OrderBy);
+                }
+                if (specifications.OrderByDescending is not null)
+                {
+                    Query = Query.OrderByDescending(specifications.OrderByDescending);
+                }
+
             }
 
             return Query;
