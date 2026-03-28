@@ -18,9 +18,7 @@ namespace E_Commerce.Services.Specifications
         }
         //all Products
         public ProductWithTypeAndPrandSpecification(ProductQueryParams queryParams)
-            : base(p=> (!queryParams.BrandId.HasValue || p.BrandId== queryParams.BrandId.Value) &&
-                       (!queryParams.TypeId.HasValue ||p.TypeId== queryParams.TypeId.Value) &&
-                       (string.IsNullOrEmpty(queryParams.Search) || p.Name.ToLower().Contains(queryParams.Search.ToLower())))
+            : base(ProductSpecificationsHelper.GetProductCriteria(queryParams))
         {
             AddInclude(p=>p.ProductType);
             AddInclude(p => p.ProductBrand);
@@ -42,6 +40,7 @@ namespace E_Commerce.Services.Specifications
                     AddOrderBy(p=>p.Id);
                     break;
             }
+            ApplyPagination(queryParams.PageSize, queryParams.PageIndex);
         }
     }
 }

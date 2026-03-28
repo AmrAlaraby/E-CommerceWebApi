@@ -39,7 +39,10 @@ namespace E_Commerce.Persistence
                 {
                     Query = Query.OrderByDescending(specifications.OrderByDescending);
                 }
-
+                if (specifications.IsPaginated)
+                {
+                    Query = Query.Skip(specifications.Skip).Take(specifications.Take);
+                }
             }
 
             return Query;
