@@ -8,6 +8,7 @@ using E_Commerce.Services.MappingProfiles;
 using E_Commerce.Services_Abstraction;
 using E_Commerce.web.Extensions;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace E_Commerce.web
 {
@@ -28,15 +29,19 @@ namespace E_Commerce.web
                 {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DeafultConnection"));
                 });
-            builder.Services.AddScoped<IDataInitializer , DataInitializer>();
-            builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
+            builder.Services.AddScoped<IDataInitializer, DataInitializer>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //builder.Services.AddAutoMapper(x => x.AddProfile<ProductProfile>());
             //builder.Services.AddTransient<ProductPictureUrlResolver>();
             //builder.Services.AddAutoMapper(x => x.LicenseKey = "", typeof(ProductProfile).Assembly); //only works at development
             builder.Services.AddAutoMapper(typeof(ServicesAssemblyRefrence).Assembly);//downgrade to 14
 
-            builder.Services.AddScoped<IProductService , ProductService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("ResdisConnection")!);
+            });
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
