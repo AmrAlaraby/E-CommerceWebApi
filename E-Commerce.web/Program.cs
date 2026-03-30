@@ -42,6 +42,7 @@ namespace E_Commerce.web
             {
                 return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("ResdisConnection")!);
             });
+            builder.Services.AddScoped<IBasketRepository, BasketRepository>();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
