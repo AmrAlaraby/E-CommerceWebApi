@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Services_Abstraction
 {
-    public interface IBaskerService
+    public interface IBasketService
     {
         Task<BasketDTO> GetBasketAsync(string id);
         Task<BasketDTO> CreareOrUpdateBasketAsync(BasketDTO basket);
