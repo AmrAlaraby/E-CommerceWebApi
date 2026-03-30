@@ -4,7 +4,7 @@ namespace E_Commerce.Shared.DTOs.BasketDTOs
 {
     public record BasketItemDTO(
         int Id, 
-        string ProductName , 
+        string Name , 
         string PictureUrl ,
         [Range(1,double.MaxValue)]
         decimal Price , 
