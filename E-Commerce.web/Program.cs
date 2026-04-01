@@ -6,7 +6,12 @@ using E_Commerce.Persistence.Repositories;
 using E_Commerce.Services;
 using E_Commerce.Services.MappingProfiles;
 using E_Commerce.Services_Abstraction;
+using E_Commerce.web.CustomMiddleWares;
 using E_Commerce.web.Extensions;
+using E_Commerce.web.Factories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -19,6 +24,7 @@ namespace E_Commerce.web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            #region Add services to the container.
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -43,9 +49,13 @@ namespace E_Commerce.web
                 return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("ResdisConnection")!);
             });
             builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-            builder.Services.AddScoped<IBasketService , BasketService>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
             builder.Services.AddScoped<ICacheRepository, CacheRepository>();
-            builder.Services.AddScoped<ICacheService , CacheService>();
+            builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
+            });
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -55,13 +65,10 @@ namespace E_Commerce.web
                               .AllowAnyMethod()
                               .AllowAnyHeader();
                     });
-            });
-
-
+            }); 
+            #endregion
 
             var app = builder.Build();
-
-            app.UseCors("AllowAll");
             #region data seeding
 
             await app.MigrateDatabaseAsync();
@@ -71,6 +78,12 @@ namespace E_Commerce.web
             #endregion
 
             // Configure the HTTP request pipeline.
+
+            #region Configure the HTTP request pipeline.
+
+           
+            app.UseMiddleware<ExceptionHandlerMiddleWare>();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -87,7 +100,8 @@ namespace E_Commerce.web
 
             app.MapControllers();
 
-            app.Run();
+            app.Run(); 
+            #endregion
         }
     }
 }
