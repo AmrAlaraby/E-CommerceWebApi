@@ -2,6 +2,7 @@
 using E_Commerce.Services_Abstraction;
 using E_Commerce.Shared;
 using E_Commerce.Shared.DTOs.ProductDTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace E_Commerce.Presentation.Controllers
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var Product = await _productService.GetProductAsync(id);
+            if (Product is null) return NotFound($"Product With Id = {id} is not found");
             return Ok(Product);
         }
         [HttpGet("types")]
