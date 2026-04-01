@@ -36,13 +36,6 @@ namespace E_Commerce.Presentation.Controllers
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var Product = await _productService.GetProductAsync(id);
-            //if (Product is null) return NotFound(new ProblemDetails()
-            //{
-            //    Title = "Product Not Found",
-            //    Detail = $"product with id = {id} not found ",
-            //    Status = StatusCodes.Status404NotFound,
-            //    //Instance = httpContext.Request.Path
-            //});
             return Ok(Product);
         }
         [HttpGet("types")]

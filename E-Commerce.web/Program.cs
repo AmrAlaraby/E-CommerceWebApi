@@ -8,6 +8,10 @@ using E_Commerce.Services.MappingProfiles;
 using E_Commerce.Services_Abstraction;
 using E_Commerce.web.CustomMiddleWares;
 using E_Commerce.web.Extensions;
+using E_Commerce.web.Factories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -48,6 +52,10 @@ namespace E_Commerce.web
             builder.Services.AddScoped<IBasketService, BasketService>();
             builder.Services.AddScoped<ICacheRepository, CacheRepository>();
             builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationResponse;
+            });
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -73,23 +81,7 @@ namespace E_Commerce.web
 
             #region Configure the HTTP request pipeline.
 
-            //app.Use(async (Context, Next) =>
-            //{
-            //    try
-            //    {
-            //        await Next.Invoke(Context);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine(ex.Message);
-            //        Context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            //        await Context.Response.WriteAsJsonAsync(new
-            //        {
-            //            StatusCode = StatusCodes.Status500InternalServerError,
-            //            Error = ex.Message
-            //        });
-            //    }
-            //});
+           
             app.UseMiddleware<ExceptionHandlerMiddleWare>();
 
             if (app.Environment.IsDevelopment())
