@@ -1,7 +1,9 @@
 
 using E_Commerce.Domain.Contracts;
+using E_Commerce.Domain.Entities.IdentityModule;
 using E_Commerce.Persistence.Data.DataSeed;
 using E_Commerce.Persistence.Data.DbContexts;
+using E_Commerce.Persistence.IdentityData.DataSeed;
 using E_Commerce.Persistence.IdentityData.DbContexts;
 using E_Commerce.Persistence.Repositories;
 using E_Commerce.Services;
@@ -12,6 +14,7 @@ using E_Commerce.web.Extensions;
 using E_Commerce.web.Factories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -36,7 +39,9 @@ namespace E_Commerce.web
                 {
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DeafultConnection"));
                 });
-            builder.Services.AddScoped<IDataInitializer, DataInitializer>();
+            builder.Services.AddKeyedScoped<IDataInitializer, DataInitializer>("Default");
+            builder.Services.AddKeyedScoped<IDataInitializer, IdentityDataInitializer>("Identity");
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //builder.Services.AddAutoMapper(x => x.AddProfile<ProductProfile>());
@@ -70,7 +75,13 @@ namespace E_Commerce.web
                               .AllowAnyMethod()
                               .AllowAnyHeader();
                     });
-            }); 
+            });
+
+            //builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            //.AddEntityFrameworkStores<StoreIdentityDbContext>();
+            builder.Services.AddIdentityCore<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreIdentityDbContext>();
             #endregion
 
             var app = builder.Build();
@@ -82,13 +93,15 @@ namespace E_Commerce.web
 
             await app.SeedDatabaseAsync();
 
+            await app.SeedIdentityDatabaseAsync();
+
             #endregion
 
             // Configure the HTTP request pipeline.
 
             #region Configure the HTTP request pipeline.
 
-           
+
             app.UseMiddleware<ExceptionHandlerMiddleWare>();
 
             if (app.Environment.IsDevelopment())
