@@ -18,6 +18,8 @@ namespace E_Commerce.Shared.CommonResult
             Description = description;
             Type = type;
         }
+
+        // static Factory Methods To Create Errors
         public static Error Failure (string code = "General.Failure", string description = "A General Falure Has Occured")
         {
             return new Error(code, description, ErrorType.Failure);
@@ -26,7 +28,7 @@ namespace E_Commerce.Shared.CommonResult
         {
             return new Error(code, description , ErrorType.Validation);
         }
-        public static Error NotFound(string code = "General.NotFound", string description = "The Requested Resorce Was Not Found")
+        public static Error NotFound(string code = "General.NotFound", string description = "The Requested Resource Was Not Found")
         {
             return new Error(code , description , ErrorType.NotFound);
         }
@@ -34,7 +36,7 @@ namespace E_Commerce.Shared.CommonResult
         {
             return new Error(code , description , ErrorType.UnAuthorized);
         }
-        public static Error Forbidden(string code = "General.Forbidden", string description = "You Do Not Have Permission To Access That Resouurse")
+        public static Error Forbidden(string code = "General.Forbidden", string description = "You Do Not Have Permission To Access That Resource")
         {
             return new Error(code , description , ErrorType.Forbidden);
         }
