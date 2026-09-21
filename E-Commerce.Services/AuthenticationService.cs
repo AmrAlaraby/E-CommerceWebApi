@@ -56,6 +56,28 @@ namespace E_Commerce.Services
             return IdentityResult.Errors.Select(E => Error.Validation(E.Code, E.Description)).ToList();
         }
 
+        public async Task<bool> EmailExistsAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            var user = await _userManager.FindByEmailAsync(email);
+            return user is not null;
+        }
+
+        public async Task<Result<UserDTO>> GetCurrentUserAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return Error.UnAuthorized("User.UnAuthorized");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                return Error.NotFound("User.NotFound", $"User with email '{email}' was not found.");
+
+            var userDto = new UserDTO(user.Email!, user.DisplayName, await CreateTokenAsync(user));
+            return userDto;
+        }
+
         private async Task<string> CreateTokenAsync(ApplicationUser user)
         {
             var claims = new List<Claim>

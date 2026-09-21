@@ -1,4 +1,4 @@
-﻿using E_Commerce.Shared.CommonResult;
+using E_Commerce.Shared.CommonResult;
 using E_Commerce.Shared.DTOs.IdentityDTOs;
 using System;
 using System.Collections.Generic;
@@ -17,5 +17,10 @@ namespace E_Commerce.Services_Abstraction
         // Email , Password , UserName , DisplayName , PhoneNumber => Token , DisplayName , Email
         Task<Result<UserDTO>> RegisterAsync(RegisterDTO registerDTO);
 
+        // check email exists
+        Task<bool> EmailExistsAsync(string email);
+
+        // get current user
+        Task<Result<UserDTO>> GetCurrentUserAsync(string email);
     }
 }
